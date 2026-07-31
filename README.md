@@ -67,6 +67,27 @@ Game Recording
 
 ---
 
+## How to run it !
+
+```
+git clone https://github.com/RayClips/ClipCloud.git
+```
+
+Create `.env` file and add your secrets 
+```
+CLIENTID_GOOGLE=
+DROPBOX_APPKEY=
+DROPBOX_APPSECRET=
+```
+
+Run the command in cmd `npm install`
+Run the command `npx electron-forge import`
+
+Then build `npm run make`
+For debugging without building `npm start`
+
+---
+
 ## 🔐 Privacy
 
 Your clips belong to you.
