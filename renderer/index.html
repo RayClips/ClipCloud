@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>ClipCloud</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Title bar (custom, draggable) -->
+  <header class="titlebar">
+    <div class="tb-brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 18h9a4 4 0 0 0 .5-7.97A6 6 0 0 0 5 9.5 3.5 3.5 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M11 11.5v4m0 0 1.6-1.6M11 15.5l-1.6-1.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>ClipCloud</span>
+    </div>
+    <div class="tb-controls">
+      <button class="tb-btn" id="min" aria-label="Minimize"><svg viewBox="0 0 12 12"><path d="M2.5 6h7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="tb-btn" id="max" aria-label="Maximize"><svg viewBox="0 0 12 12"><rect x="2.7" y="2.7" width="6.6" height="6.6" rx="1.4" stroke="currentColor" stroke-width="1.3"/></svg></button>
+      <button class="tb-btn close" id="close" aria-label="Close"><svg viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+    </div>
+  </header>
+
+  <div class="app">
+    <!-- Rail -->
+    <aside class="rail">
+      <nav class="nav">
+        <button class="nav-item active" data-view="clips" data-tip="Clips">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor"/></svg>
+        </button>
+        <button class="nav-item" data-view="dashboard" data-tip="Storage">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m16 14H4m4 0v-6m4 6V9m4 10v-9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+        <button class="nav-item" data-view="settings" data-tip="Settings">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M12 3v2m0 14v2M5.6 5.6l1.4 1.4m10 10 1.4 1.4M3 12h2m14 0h2M5.6 18.4l1.4-1.4m10-10 1.4-1.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </nav>
+      <div class="rail-foot">
+        <span class="pulse"></span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- CLIPS -->
+      <section class="view active" id="view-clips">
+        <div class="hero">
+          <div class="hero-glow"></div>
+          <div class="hero-text">
+            <p class="kicker">Live backup</p>
+            <h1>Your clips, everywhere.</h1>
+            <p class="lede">ClipCloud is watching your capture folder. New clips upload automatically — local space clears itself.</p>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-num">347</span>
+            <span class="hero-lbl">clips safe in the cloud</span>
+          </div>
+        </div>
+
+        <div class="pause-banner" id="pause-banner" hidden>
+          <span class="pause-dot"></span>
+          <span id="pause-text">Backup paused — system busy. Resuming automatically.</span>
+        </div>
+
+        <div class="row-head">
+          <h2>Recent</h2>
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.7"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <input type="text" id="search" placeholder="Search clips" />
+          </div>
+        </div>
+
+        <div class="clip-grid" id="clip-grid"></div>
+        <p class="empty" id="clip-empty" hidden>No clips match your search.</p>
+      </section>
+
+      <!-- STORAGE -->
+      <section class="view" id="view-dashboard">
+        <div class="page-head row-between">
+          <div><h1>Storage</h1><p class="lede">Live usage from your connected accounts and watched folder.</p></div>
+          <button class="btn" id="storage-refresh">Refresh</button>
+        </div>
+        <div id="storage-body"><p class="empty">Loading…</p></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings">
+        <div class="page-head"><h1>Settings</h1><p class="lede">Control how ClipCloud backs up your clips.</p></div>
+
+        <p class="group-label">Connections</p>
+        <div class="settings">
+          <div class="srow">
+            <div class="srow-text"><span class="srow-title">Google Drive</span><span class="srow-sub" id="conn-google-sub">Not connected</span></div>
+            <button class="btn" id="conn-google" data-provider="google">Connect</button>
+          </div>
+          <div class="srow">
+            <div class="srow-text"><span class="srow-title">Dropbox</span><span class="srow-sub" id="conn-dropbox-sub">Not connected</span></div>
+            <button class="btn" id="conn-dropbox" data-provider="dropbox">Connect</button>
+          </div>
+        </div>
+
+        <p class="group-label">Backup</p>
+        <div class="settings">
+          <div class="srow">
+            <div class="srow-text"><span class="srow-title">Clips folder</span><span class="srow-sub" id="set-folder">…</span></div>
+            <button class="btn" id="set-pick">Change</button>
+          </div>
+          <div class="srow">
+            <div class="srow-text"><span class="srow-title">Delete local copy after upload</span><span class="srow-sub">Free up disk space automatically</span></div>
+            <label class="toggle"><input type="checkbox" id="set-deleteLocal" /><span class="track"></span></label>
+          </div>
+          <div class="srow">
+            <div class="srow-text"><span class="srow-title">Auto-retry failed uploads</span><span class="srow-sub">Keep trying until the upload succeeds</span></div>
+            <label class="toggle"><input type="checkbox" id="set-autoRetry" /><span class="track"></span></label>
+          </div>
+          <div class="srow">
+            <div class="srow-text"><span class="srow-title">Pause while gaming</span><span class="srow-sub">Hold uploads when CPU, GPU or RAM is busy</span></div>
+            <label class="toggle"><input type="checkbox" id="set-pauseWhenBusy" /><span class="track"></span></label>
+          </div>
+        </div>
+        <p class="settings-note" id="set-saved">Saved automatically</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
